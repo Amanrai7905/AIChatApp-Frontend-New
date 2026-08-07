@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import api from "../services/api";
 import ReactMarkdown from "react-markdown";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+import { FiMic, FiMicOff } from "react-icons/fi";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
@@ -27,6 +31,11 @@ function Chat() {
   const textareaRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
+  const {
+  transcript,listening,
+  resetTranscript,
+  browserSupportsSpeechRecognition,
+} = useSpeechRecognition();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
   const [conversations, setConversations] = useState([]);
@@ -56,6 +65,29 @@ function Chat() {
       behavior: "smooth",
     });
   }, [messages, loading]);
+   
+
+   useEffect(() => {
+    if (transcript) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPrompt(transcript);
+    }
+    }, [transcript]);
+
+    const startListening = () => {
+  resetTranscript();
+
+  SpeechRecognition.startListening({
+    continuous: true,
+    language: "en-US",
+  });
+};
+
+const stopListening = () => {
+  SpeechRecognition.stopListening();
+};
+
+
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -231,12 +263,15 @@ function Chat() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadConversations();
   }, []);
 
   const dark = theme === "dark";
   const activeTitle = selectedConversation?.title || "New conversation";
-
+   if (!browserSupportsSpeechRecognition) {
+      return <p>Your browser doesn't support Speech Recognition.</p>;
+    }
   return (
     <div
       className={`flex h-screen overflow-hidden transition-colors duration-300 ${
@@ -721,27 +756,35 @@ function Chat() {
                   : "border-slate-200 bg-white shadow-[0_30px_60px_-25px_rgba(15,23,42,0.1)]"
               }`}
             >
-              <div className="flex items-end gap-3">
-                <textarea
-                  ref={textareaRef}
-                  rows={1}
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="Ask anything..."
-                  className="max-h-40 flex-1 resize-none bg-transparent text-sm outline-none md:text-[15px]"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      sendMessage();
-                    }
-                  }}
-                />
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex-1 rounded-[28px] border px-4 py-3 transition focus-within:border-sky-400 focus-within:ring-2 focus-within:ring-sky-400/20 ${
+                    dark
+                      ? "border-white/10 bg-white/5"
+                      : "border-slate-200 bg-slate-100"
+                  }`}
+                >
+                  <textarea
+                    ref={textareaRef}
+                    rows={1}
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder="Ask anything..."
+                    className="min-h-[52px] max-h-40 w-full resize-none bg-transparent text-sm text-current placeholder:text-slate-500 outline-none transition md:text-[15px]"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                      }
+                    }}
+                  />
+                </div>
 
                 <button
                   type="button"
                   onClick={sendMessage}
                   disabled={loading}
-                  className={`rounded-2xl p-3 transition ${
+                  className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl transition ${
                     loading
                       ? "cursor-not-allowed bg-slate-300 text-slate-500"
                       : dark
@@ -750,6 +793,19 @@ function Chat() {
                   }`}
                 >
                   <FiSend />
+                </button>
+                <button
+                  type="button"
+                  onClick={listening ? stopListening : startListening}
+                  className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl transition ${
+                    listening
+                      ? "bg-red-500 text-white"
+                      : dark
+                        ? "bg-white/10 hover:bg-white/20"
+                        : "bg-slate-100 hover:bg-slate-200"
+                  }`}
+                >
+                  {listening ? <FiMicOff /> : <FiMic />}
                 </button>
               </div>
 
@@ -760,6 +816,11 @@ function Chat() {
                 <p className={dark ? "text-slate-400" : "text-slate-500"}>
                   {prompt.length}/2000
                 </p>
+                {listening && (
+                 <p className="text-red-500 text-xs font-medium mt-2">
+                  🎤 Listening...
+                   </p>
+)}
               </div>
             </div>
           </div>
