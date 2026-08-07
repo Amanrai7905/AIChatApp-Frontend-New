@@ -32,10 +32,11 @@ function Chat() {
 
   const [loading, setLoading] = useState(false);
   const {
-  transcript,listening,
-  resetTranscript,
-  browserSupportsSpeechRecognition,
-} = useSpeechRecognition();
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
   const [conversations, setConversations] = useState([]);
@@ -65,34 +66,32 @@ function Chat() {
       behavior: "smooth",
     });
   }, [messages, loading]);
-   
 
-   useEffect(() => {
+  useEffect(() => {
     if (transcript) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPrompt(transcript);
     }
-    }, [transcript]);
+  }, [transcript]);
 
-    const startListening = () => {
-  resetTranscript();
+  const startListening = () => {
+    resetTranscript();
 
-  SpeechRecognition.startListening({
-    continuous: true,
-    language: "en-US",
-  });
-};
+    SpeechRecognition.startListening({
+      continuous: true,
+      language: "en-US",
+    });
+  };
 
-const stopListening = () => {
-  SpeechRecognition.stopListening();
-};
-
-
+  const stopListening = () => {
+    SpeechRecognition.stopListening();
+  };
 
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
     }
   }, [prompt]);
 
@@ -143,9 +142,10 @@ const stopListening = () => {
 
     try {
       if (!conversationId) {
-        const title = currentPrompt.length > 34
-          ? currentPrompt.substring(0, 34) + "..."
-          : currentPrompt;
+        const title =
+          currentPrompt.length > 34
+            ? currentPrompt.substring(0, 34) + "..."
+            : currentPrompt;
 
         const response = await api.post("/conversation", {
           title,
@@ -269,15 +269,13 @@ const stopListening = () => {
 
   const dark = theme === "dark";
   const activeTitle = selectedConversation?.title || "New conversation";
-   if (!browserSupportsSpeechRecognition) {
-      return <p>Your browser doesn't support Speech Recognition.</p>;
-    }
+  if (!browserSupportsSpeechRecognition) {
+    return <p>Your browser doesn't support Speech Recognition.</p>;
+  }
   return (
     <div
       className={`flex h-screen overflow-hidden transition-colors duration-300 ${
-        dark
-          ? "bg-[#0b1020] text-white"
-          : "bg-[#f3f5fb] text-slate-900"
+        dark ? "bg-[#0b1020] text-white" : "bg-[#f3f5fb] text-slate-900"
       }`}
     >
       {sidebarOpen && (
@@ -300,11 +298,7 @@ const stopListening = () => {
           transition-transform duration-300
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0
-          ${
-            dark
-              ? "border-white/10 bg-[#111827]"
-              : "border-slate-200 bg-white"
-          }
+          ${dark ? "border-white/10 bg-[#111827]" : "border-slate-200 bg-white"}
         `}
       >
         <div className="p-4">
@@ -339,7 +333,9 @@ const stopListening = () => {
           onClick={() => setOpenMenuId(null)}
         >
           <div className="mb-3 px-2">
-            <p className={`text-[11px] uppercase tracking-[0.24em] ${dark ? "text-slate-400" : "text-slate-500"}`}>
+            <p
+              className={`text-[11px] uppercase tracking-[0.24em] ${dark ? "text-slate-400" : "text-slate-500"}`}
+            >
               Recent chats
             </p>
           </div>
@@ -398,7 +394,9 @@ const stopListening = () => {
                     className="flex-1 text-left"
                   >
                     <p className="truncate text-sm font-medium">{conv.title}</p>
-                    <p className={`mt-1 text-xs ${dark ? "text-slate-400" : "text-slate-500"}`}>
+                    <p
+                      className={`mt-1 text-xs ${dark ? "text-slate-400" : "text-slate-500"}`}
+                    >
                       Tap to resume
                     </p>
                   </button>
@@ -411,7 +409,9 @@ const stopListening = () => {
                       aria-label={`Open actions for ${conv.title}`}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setOpenMenuId((current) => (current === conv.id ? null : conv.id));
+                        setOpenMenuId((current) =>
+                          current === conv.id ? null : conv.id,
+                        );
                       }}
                       className={`rounded-xl p-2 transition ${
                         dark
@@ -435,7 +435,9 @@ const stopListening = () => {
                           type="button"
                           onClick={() => handleEditConversation(conv)}
                           className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm ${
-                            dark ? "text-slate-100 hover:bg-white/5" : "text-slate-700 hover:bg-slate-50"
+                            dark
+                              ? "text-slate-100 hover:bg-white/5"
+                              : "text-slate-700 hover:bg-slate-50"
                           }`}
                         >
                           <span className="text-amber-500">✎</span>
@@ -445,7 +447,9 @@ const stopListening = () => {
                           type="button"
                           onClick={() => handleDeleteConversation(conv.id)}
                           className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm ${
-                            dark ? "text-rose-300 hover:bg-white/5" : "text-rose-500 hover:bg-rose-50"
+                            dark
+                              ? "text-rose-300 hover:bg-white/5"
+                              : "text-rose-500 hover:bg-rose-50"
                           }`}
                         >
                           <span>🗑</span>
@@ -469,7 +473,9 @@ const stopListening = () => {
             }`}
           >
             <p className="text-sm font-semibold">AI workspace</p>
-            <p className={`mt-2 text-sm ${dark ? "text-slate-300" : "text-slate-600"}`}>
+            <p
+              className={`mt-2 text-sm ${dark ? "text-slate-300" : "text-slate-600"}`}
+            >
               Keep your conversations organized and return to them anytime.
             </p>
           </div>
@@ -510,14 +516,18 @@ const stopListening = () => {
             <div className="flex items-center gap-3">
               <div
                 className={`rounded-2xl p-2 ${
-                  dark ? "bg-sky-500/15 text-sky-300" : "bg-slate-900 text-white"
+                  dark
+                    ? "bg-sky-500/15 text-sky-300"
+                    : "bg-slate-900 text-white"
                 }`}
               >
                 <FiZap />
               </div>
               <div>
                 <p className="text-sm font-semibold">{activeTitle}</p>
-                <p className={`text-xs ${dark ? "text-slate-400" : "text-slate-500"}`}>
+                <p
+                  className={`text-xs ${dark ? "text-slate-400" : "text-slate-500"}`}
+                >
                   Intelligent assistant
                 </p>
               </div>
@@ -529,7 +539,9 @@ const stopListening = () => {
               type="button"
               onClick={() => setTheme(dark ? "light" : "dark")}
               className={`rounded-xl p-2 transition ${
-                dark ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"
+                dark
+                  ? "bg-white/5 hover:bg-white/10"
+                  : "bg-slate-100 hover:bg-slate-200"
               }`}
             >
               {dark ? <FiSun /> : <FiMoon />}
@@ -542,7 +554,9 @@ const stopListening = () => {
                   aria-label="Open profile menu"
                   onClick={() => setProfileOpen((prev) => !prev)}
                   className={`rounded-full p-2.5 transition ${
-                    dark ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"
+                    dark
+                      ? "bg-white/5 hover:bg-white/10"
+                      : "bg-slate-100 hover:bg-slate-200"
                   }`}
                 >
                   <FiUser size={18} />
@@ -562,7 +576,9 @@ const stopListening = () => {
                         setProfileOpen(false);
                       }}
                       className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm ${
-                        dark ? "text-slate-100 hover:bg-white/5" : "text-slate-700 hover:bg-slate-50"
+                        dark
+                          ? "text-slate-100 hover:bg-white/5"
+                          : "text-slate-700 hover:bg-slate-50"
                       }`}
                     >
                       <FiUser size={14} />
@@ -575,7 +591,9 @@ const stopListening = () => {
                         logout();
                       }}
                       className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm ${
-                        dark ? "text-rose-300 hover:bg-white/5" : "text-rose-500 hover:bg-rose-50"
+                        dark
+                          ? "text-rose-300 hover:bg-white/5"
+                          : "text-rose-500 hover:bg-rose-50"
                       }`}
                     >
                       <FiLogOut size={14} />
@@ -589,9 +607,7 @@ const stopListening = () => {
                 type="button"
                 onClick={() => (window.location.href = "/register")}
                 className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                  dark
-                    ? "bg-white text-slate-950"
-                    : "bg-slate-900 text-white"
+                  dark ? "bg-white text-slate-950" : "bg-slate-900 text-white"
                 }`}
               >
                 Signup
@@ -618,7 +634,9 @@ const stopListening = () => {
               <div className="max-w-2xl text-center">
                 <div
                   className={`mx-auto mb-4 inline-flex rounded-full p-3 ${
-                    dark ? "bg-sky-500/10 text-sky-300" : "bg-slate-900 text-white"
+                    dark
+                      ? "bg-sky-500/10 text-sky-300"
+                      : "bg-slate-900 text-white"
                   }`}
                 >
                   <FiZap />
@@ -626,8 +644,11 @@ const stopListening = () => {
                 <h2 className="text-3xl font-semibold md:text-4xl">
                   How can I help you today?
                 </h2>
-                <p className={`mt-3 text-sm md:text-base ${dark ? "text-slate-300" : "text-slate-600"}`}>
-                  Ask anything — from quick explanations to full code walkthroughs.
+                <p
+                  className={`mt-3 text-sm md:text-base ${dark ? "text-slate-300" : "text-slate-600"}`}
+                >
+                  Ask anything — from quick explanations to full code
+                  walkthroughs.
                 </p>
 
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -675,12 +696,16 @@ const stopListening = () => {
                       <div className="mb-3 flex items-center gap-2">
                         <span
                           className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-                            dark ? "bg-sky-500/15 text-sky-300" : "bg-slate-900 text-white"
+                            dark
+                              ? "bg-sky-500/15 text-sky-300"
+                              : "bg-slate-900 text-white"
                           }`}
                         >
                           AI
                         </span>
-                        <span className={`text-xs ${dark ? "text-slate-400" : "text-slate-500"}`}>
+                        <span
+                          className={`text-xs ${dark ? "text-slate-400" : "text-slate-500"}`}
+                        >
                           Assistant
                         </span>
                       </div>
@@ -693,7 +718,9 @@ const stopListening = () => {
                         <ReactMarkdown
                           components={{
                             code({ inline, className, children, ...props }) {
-                              const match = /language-(\w+)/.exec(className || "");
+                              const match = /language-(\w+)/.exec(
+                                className || "",
+                              );
 
                               return !inline && match ? (
                                 <div className="my-4 overflow-hidden rounded-2xl">
@@ -817,10 +844,10 @@ const stopListening = () => {
                   {prompt.length}/2000
                 </p>
                 {listening && (
-                 <p className="text-red-500 text-xs font-medium mt-2">
-                  🎤 Listening...
-                   </p>
-)}
+                  <p className="text-red-500 text-xs font-medium mt-2">
+                    🎤 Listening...
+                  </p>
+                )}
               </div>
             </div>
           </div>
