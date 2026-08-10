@@ -824,15 +824,25 @@ function Chat() {
                 <button
                   type="button"
                   onClick={listening ? stopListening : startListening}
-                  className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl transition ${
-                    listening
-                      ? "bg-red-500 text-white"
-                      : dark
-                        ? "bg-white/10 hover:bg-white/20"
-                        : "bg-slate-100 hover:bg-slate-200"
+                  disabled={loading}
+                  title={listening ? "Stop listening" : "Start voice input"}
+                  className={`relative rounded-2xl p-3 transition-all duration-200 ${
+                    loading
+                      ? "cursor-not-allowed bg-slate-300 text-slate-500"
+                      : listening
+                        ? "bg-red-500 text-white hover:bg-red-600"
+                        : dark
+                          ? "bg-white/10 text-slate-200 hover:bg-white/20"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                   }`}
                 >
-                  {listening ? <FiMicOff /> : <FiMic />}
+                  {listening && (
+                    <span className="absolute inset-0 animate-ping rounded-2xl bg-red-400 opacity-30" />
+                  )}
+
+                  <span className="relative">
+                    {listening ? <FiMicOff size={18} /> : <FiMic size={18} />}
+                  </span>
                 </button>
               </div>
 
@@ -844,9 +854,11 @@ function Chat() {
                   {prompt.length}/2000
                 </p>
                 {listening && (
-                  <p className="text-red-500 text-xs font-medium mt-2">
-                    🎤 Listening...
-                  </p>
+                  <div className="mt-2 flex items-center gap-2 text-xs font-medium text-red-500">
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
+                    <span>Listening...</span>
+                    <span className="text-slate-400">Speak now</span>
+                  </div>
                 )}
               </div>
             </div>
