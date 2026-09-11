@@ -123,8 +123,10 @@ function Login() {
             <button
               type="button"
               onClick={() => setTheme(dark ? "light" : "dark")}
-              className={`rounded-xl px-3 py-2 text-sm font-medium ${
-                dark ? "bg-sky-400 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"
+              className={`rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
+                dark
+                  ? "bg-white text-slate-950 hover:bg-slate-200"
+                  : "bg-slate-950 text-white hover:bg-slate-800"
               }`}
             >
               {dark ? "Light" : "Dark"}
