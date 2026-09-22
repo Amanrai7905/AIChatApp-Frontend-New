@@ -465,20 +465,90 @@ function Chat() {
         </div>
 
         <div className="mt-auto p-4">
-          <div
-            className={`rounded-2xl border p-4 ${
-              dark
-                ? "border-white/10 bg-white/3"
-                : "border-slate-200 bg-slate-50"
-            }`}
-          >
-            <p className="text-sm font-semibold">AI workspace</p>
-            <p
-              className={`mt-2 text-sm ${dark ? "text-slate-300" : "text-slate-600"}`}
+          {localStorage.getItem("token") ? (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setProfileOpen((prev) => !prev)}
+                className={`flex w-full items-center gap-3 rounded-2xl border p-3 text-left transition ${
+                  dark
+                    ? "border-white/10 bg-white/3 hover:bg-white/6"
+                    : "border-slate-200 bg-slate-50 hover:bg-slate-100"
+                }`}
+              >
+                <span
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                    dark
+                      ? "bg-sky-400 text-slate-950"
+                      : "bg-slate-900 text-white"
+                  }`}
+                >
+                  <FiUser size={17} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-semibold">
+                    Your profile
+                  </span>
+                  <span
+                    className={`mt-0.5 block text-xs ${dark ? "text-slate-400" : "text-slate-500"}`}
+                  >
+                    Account settings
+                  </span>
+                </span>
+                <FiMoreHorizontal
+                  className={dark ? "text-slate-400" : "text-slate-500"}
+                />
+              </button>
+
+              {profileOpen && (
+                <div
+                  className={`absolute bottom-full left-0 right-0 z-30 mb-2 overflow-hidden rounded-2xl border shadow-lg ${
+                    dark
+                      ? "border-white/10 bg-[#111827]"
+                      : "border-slate-200 bg-white"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setProfileOpen(false)}
+                    className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm ${
+                      dark
+                        ? "text-slate-100 hover:bg-white/5"
+                        : "text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    <FiUser size={14} />
+                    Profile
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileOpen(false);
+                      logout();
+                    }}
+                    className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm ${
+                      dark
+                        ? "text-rose-300 hover:bg-white/5"
+                        : "text-rose-500 hover:bg-rose-50"
+                    }`}
+                  >
+                    <FiLogOut size={14} />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => (window.location.href = "/register")}
+              className={`flex w-full items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold ${
+                dark ? "bg-white text-slate-950" : "bg-slate-900 text-white"
+              }`}
             >
-              Keep your conversations organized and return to them anytime.
-            </p>
-          </div>
+              Signup
+            </button>
+          )}
         </div>
       </aside>
 
@@ -534,86 +604,18 @@ function Chat() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setTheme(dark ? "light" : "dark")}
-              className={`rounded-xl p-2 transition ${
-                dark
-                  ? "bg-white/5 hover:bg-white/10"
-                  : "bg-slate-100 hover:bg-slate-200"
-              }`}
-            >
-              {dark ? <FiSun /> : <FiMoon />}
-            </button>
-
-            {localStorage.getItem("token") ? (
-              <div className="relative">
-                <button
-                  type="button"
-                  aria-label="Open profile menu"
-                  onClick={() => setProfileOpen((prev) => !prev)}
-                  className={`rounded-full p-2.5 transition ${
-                    dark
-                      ? "bg-white/5 hover:bg-white/10"
-                      : "bg-slate-100 hover:bg-slate-200"
-                  }`}
-                >
-                  <FiUser size={18} />
-                </button>
-
-                {profileOpen && (
-                  <div
-                    className={`absolute right-0 top-full z-30 mt-2 w-44 overflow-hidden rounded-2xl border shadow-lg ${
-                      dark
-                        ? "border-white/10 bg-[#111827]"
-                        : "border-slate-200 bg-white"
-                    }`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setProfileOpen(false);
-                      }}
-                      className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm ${
-                        dark
-                          ? "text-slate-100 hover:bg-white/5"
-                          : "text-slate-700 hover:bg-slate-50"
-                      }`}
-                    >
-                      <FiUser size={14} />
-                      Profile
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setProfileOpen(false);
-                        logout();
-                      }}
-                      className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm ${
-                        dark
-                          ? "text-rose-300 hover:bg-white/5"
-                          : "text-rose-500 hover:bg-rose-50"
-                      }`}
-                    >
-                      <FiLogOut size={14} />
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => (window.location.href = "/register")}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                  dark ? "bg-white text-slate-950" : "bg-slate-900 text-white"
-                }`}
-              >
-                Signup
-              </button>
-            )}
-          </div>
+          <button
+            type="button"
+            onClick={() => setTheme(dark ? "light" : "dark")}
+            aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+            className={`rounded-xl p-2 transition ${
+              dark
+                ? "bg-white/5 hover:bg-white/10"
+                : "bg-slate-100 hover:bg-slate-200"
+            }`}
+          >
+            {dark ? <FiSun /> : <FiMoon />}
+          </button>
         </header>
 
         <div
