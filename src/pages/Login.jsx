@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FiArrowRight, FiZap } from "react-icons/fi";
+import { FiArrowRight, FiEye, FiEyeOff, FiZap } from "react-icons/fi";
 import api from "../services/api";
 import StatusPopup from "../components/StatusPopup";
 
@@ -9,6 +9,7 @@ function Login() {
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [popup, setPopup] = useState(null);
@@ -163,19 +164,39 @@ function Login() {
               <label className={`mb-2 block text-sm font-medium ${dark ? "text-white" : "text-slate-900"}`} htmlFor="password">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`w-full rounded-2xl border px-4 py-3 outline-none transition ${
+              <div
+                className={`flex items-center rounded-2xl border transition focus-within:border-sky-400 ${
                   dark
-                    ? "border-white/10 bg-[#0f172a] text-white placeholder:text-slate-500 focus:border-sky-400"
-                    : "border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400"
+                    ? "border-white/10 bg-[#0f172a]"
+                    : "border-slate-200 bg-white"
                 }`}
-              />
+              >
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`min-w-0 flex-1 rounded-2xl bg-transparent px-4 py-3 outline-none ${
+                    dark
+                      ? "text-white placeholder:text-slate-500"
+                      : "text-slate-900 placeholder:text-slate-400"
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className={`mr-2 rounded-xl p-2 transition ${
+                    dark
+                      ? "text-slate-400 hover:bg-white/10 hover:text-white"
+                      : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                  }`}
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
             </div>
 
             {error && (
