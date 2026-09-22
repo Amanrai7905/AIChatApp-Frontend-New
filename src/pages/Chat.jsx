@@ -670,96 +670,93 @@ function Chat() {
               </div>
             </div>
           ) : (
-            <div className="mx-auto w-full max-w-5xl px-4 py-6 md:px-6">
-              <div className="space-y-5">
+            <div className="mx-auto w-full max-w-4xl px-4 py-8 md:px-8">
+              <div className="space-y-8">
                 {messages.map((msg, index) => (
-                  <div key={index} className="space-y-4">
-                    <div className="flex justify-end">
+                  <div key={index} className="space-y-6">
+                    <div className="flex justify-end pl-8 md:pl-16">
                       <div
-                        className={`max-w-[90%] rounded-[26px] px-4 py-3 text-sm leading-7 md:max-w-[80%] md:px-5 md:text-[15px] ${
+                        className={`max-w-[90%] rounded-3xl px-4 py-3 text-sm leading-7 md:max-w-[78%] md:px-5 md:text-[15px] ${
                           dark
-                            ? "bg-slate-800 text-white shadow-lg"
-                            : "bg-white text-slate-900 shadow-sm ring-1 ring-slate-200"
+                            ? "bg-slate-700/90 text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
+                            : "bg-slate-900 text-white shadow-sm"
                         }`}
                       >
                         {msg.userMessage}
                       </div>
                     </div>
 
-                    <div
-                      className={`rounded-[28px] px-4 py-4 md:px-5 ${
-                        dark
-                          ? "bg-white/3 ring-1 ring-white/6"
-                          : "bg-white ring-1 ring-slate-200"
-                      }`}
-                    >
-                      <div className="mb-3 flex items-center gap-2">
+                    {msg.aiResponse ? (
+                      <div className="flex gap-3 md:gap-4">
                         <span
-                          className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                          className={`mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${
                             dark
-                              ? "bg-sky-500/15 text-sky-300"
+                              ? "bg-sky-400 text-slate-950"
                               : "bg-slate-900 text-white"
                           }`}
                         >
                           AI
                         </span>
-                        <span
-                          className={`text-xs ${dark ? "text-slate-400" : "text-slate-500"}`}
-                        >
-                          Assistant
-                        </span>
-                      </div>
 
-                      <div
-                        className={`prose prose-sm max-w-none leading-8 md:prose-base ${
-                          dark ? "prose-invert" : ""
-                        }`}
-                      >
-                        <ReactMarkdown
-                          components={{
-                            code({ inline, className, children, ...props }) {
-                              const match = /language-(\w+)/.exec(
-                                className || "",
-                              );
+                        <div className="min-w-0 flex-1 pt-0.5">
+                          <p
+                            className={`mb-2 text-xs font-semibold ${dark ? "text-slate-400" : "text-slate-500"}`}
+                          >
+                            Assistant
+                          </p>
+                          <div
+                            className={`chat-markdown text-[15px] leading-7 md:text-base ${dark ? "chat-markdown-dark" : ""}`}
+                          >
+                            <ReactMarkdown
+                              components={{
+                                code({ inline, className, children, ...props }) {
+                                  const match = /language-(\w+)/.exec(
+                                    className || "",
+                                  );
 
-                              return !inline && match ? (
-                                <div className="my-4 overflow-hidden rounded-2xl">
-                                  <SyntaxHighlighter
-                                    style={dark ? oneDark : oneLight}
-                                    language={match[1]}
-                                    PreTag="div"
-                                    {...props}
-                                  >
-                                    {String(children).replace(/\n$/, "")}
-                                  </SyntaxHighlighter>
-                                </div>
-                              ) : (
-                                <code
-                                  className={`rounded-md px-1.5 py-1 text-[13px] ${
-                                    dark ? "bg-white/8" : "bg-slate-100"
-                                  }`}
-                                  {...props}
-                                >
-                                  {children}
-                                </code>
-                              );
-                            },
-                          }}
-                        >
-                          {msg.aiResponse}
-                        </ReactMarkdown>
+                                  return !inline && match ? (
+                                    <div className="my-4 overflow-hidden rounded-xl">
+                                      <SyntaxHighlighter
+                                        style={dark ? oneDark : oneLight}
+                                        language={match[1]}
+                                        PreTag="div"
+                                        {...props}
+                                      >
+                                        {String(children).replace(/\n$/, "")}
+                                      </SyntaxHighlighter>
+                                    </div>
+                                  ) : (
+                                    <code
+                                      className={`rounded-md px-1.5 py-1 text-[13px] ${
+                                        dark ? "bg-white/10" : "bg-slate-100"
+                                      }`}
+                                      {...props}
+                                    >
+                                      {children}
+                                    </code>
+                                  );
+                                },
+                              }}
+                            >
+                              {msg.aiResponse}
+                            </ReactMarkdown>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ) : null}
                   </div>
                 ))}
 
                 {loading && (
-                  <div className="rounded-3xl px-4 py-3">
-                    <div className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm text-slate-400">
+                  <div className="flex items-center gap-3 md:gap-4">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-sky-400 text-xs font-bold text-slate-950">
+                      AI
+                    </span>
+                    <div className={`inline-flex items-center gap-2 text-sm ${dark ? "text-slate-400" : "text-slate-500"}`}>
                       <span className="h-2 w-2 animate-bounce rounded-full bg-sky-400" />
                       <span className="h-2 w-2 animate-bounce rounded-full bg-sky-400 [animation-delay:0.15s]" />
                       <span className="h-2 w-2 animate-bounce rounded-full bg-sky-400 [animation-delay:0.3s]" />
-                      <span className="ml-2">Thinking…</span>
+                      <span className="ml-1">Thinking</span>
                     </div>
                   </div>
                 )}
