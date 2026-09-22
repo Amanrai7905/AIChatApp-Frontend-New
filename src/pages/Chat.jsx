@@ -6,6 +6,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { FiMic, FiMicOff } from "react-icons/fi";
+import { getCurrentUser } from "../services/auth";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
@@ -270,6 +271,7 @@ function Chat() {
   }, []);
 
   const dark = theme === "dark";
+  const currentUser = getCurrentUser();
   const activeTitle = selectedConversation?.title || "New conversation";
   if (!browserSupportsSpeechRecognition) {
     return <p>Your browser doesn't support Speech Recognition.</p>;
@@ -489,12 +491,12 @@ function Chat() {
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-semibold">
-                    Your profile
+                    {currentUser?.name || "Your profile"}
                   </span>
                   <span
                     className={`mt-0.5 block text-xs ${dark ? "text-slate-400" : "text-slate-500"}`}
                   >
-                    Account settings
+                    {currentUser?.email || "Account settings"}
                   </span>
                 </span>
                 <FiMoreHorizontal

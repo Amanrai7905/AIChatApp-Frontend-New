@@ -8,9 +8,11 @@ import {
   FiUser,
   FiZap,
 } from "react-icons/fi";
+import { getCurrentUser } from "../services/auth";
 
 function Profile() {
   const navigate = useNavigate();
+  const currentUser = getCurrentUser();
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
   const dark = theme === "dark";
 
@@ -97,9 +99,9 @@ function Profile() {
                 <FiUser />
               </div>
               <div>
-                <h2 className="text-lg font-semibold">Your AI workspace</h2>
+                <h2 className="text-lg font-semibold">{currentUser?.name || "Your profile"}</h2>
                 <p className={`mt-1 text-sm ${dark ? "text-slate-400" : "text-slate-500"}`}>
-                  Signed-in account
+                  {currentUser?.email || "Signed-in account"}
                 </p>
               </div>
             </div>
