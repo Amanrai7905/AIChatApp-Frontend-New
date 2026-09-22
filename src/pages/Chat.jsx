@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import ReactMarkdown from "react-markdown";
 import SpeechRecognition, {
@@ -27,6 +28,7 @@ import {
 } from "react-icons/fi";
 
 function Chat() {
+  const navigate = useNavigate();
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -510,7 +512,10 @@ function Chat() {
                 >
                   <button
                     type="button"
-                    onClick={() => setProfileOpen(false)}
+                    onClick={() => {
+                      setProfileOpen(false);
+                      navigate("/profile");
+                    }}
                     className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm ${
                       dark
                         ? "text-slate-100 hover:bg-white/5"
